@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arakawa Lift Coach</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="side-nav" aria-label="メインナビゲーション">
+      <div class="brand">
+        <span>ALC</span>
+        <strong>Lift Coach</strong>
+      </div>
+      <button class="nav-link is-active" data-view="coachView">コーチ</button>
+      <button class="nav-link" data-view="programView">初心者プログラム</button>
+      <button class="nav-link" data-view="workoutView">今日のトレーニング</button>
+      <button class="nav-link" data-view="libraryView">種目図鑑</button>
+      <button class="nav-link" data-view="logView">記録</button>
+      <button class="nav-link" data-view="historyView">履歴</button>
+    </aside>
+
+    <main class="app-shell">
+      <section class="app-view is-active" id="coachView">
+        <div class="hero">
+          <div>
+            <p class="eyebrow">Beginner premium coach</p>
+            <h1>迷わず始めて、正しく続ける。</h1>
+            <p class="lead">月額で払う価値は、メニューより「今日は何を、どの順番で、どこに注意してやるか」が毎回わかること。</p>
+          </div>
+          <img src="assets/training-hero.png" alt="ジムで筋トレを始めるためのビジュアル" />
+        </div>
+
+        <section class="coach-grid">
+          <article class="panel checkin-panel">
+            <div class="panel-header">
+              <div>
+                <p class="label">Check-in</p>
+                <h2>今の状態</h2>
+              </div>
+            </div>
+
+            <div class="field">
+              <span>今日の目的</span>
+              <div class="segmented" id="goalGroup">
+                <button class="is-active" data-goal="muscle">筋肥大</button>
+                <button data-goal="strength">重量更新</button>
+                <button data-goal="fatloss">絞る</button>
+                <button data-goal="maintain">整える</button>
+              </div>
+            </div>
+
+            <div class="field two-col">
+              <label>使える時間<select id="timeInput"><option value="35">35分</option><option value="50" selected>50分</option><option value="70">70分</option></select></label>
+              <label>睡眠<select id="sleepInput"><option value="good">よく寝た</option><option value="normal" selected>普通</option><option value="bad">少ない</option></select></label>
+            </div>
+
+            <div class="slider-row">
+              <label for="fatigueInput">疲労 <strong id="fatigueValue">2</strong></label>
+              <input id="fatigueInput" type="range" min="1" max="5" value="2" />
+            </div>
+
+            <div class="toggle-grid">
+              <label class="toggle"><input id="alcoholInput" type="checkbox" /> 飲酒あり</label>
+              <label class="toggle"><input id="shoulderInput" type="checkbox" /> 肩に違和感</label>
+              <label class="toggle"><input id="hipInput" type="checkbox" /> 股関節に違和感</label>
+              <label class="toggle"><input id="motivationInput" type="checkbox" checked /> 気合いある</label>
+            </div>
+          </article>
+
+          <article class="panel plan-panel">
+            <div class="panel-header">
+              <div>
+                <p class="label">Today</p>
+                <h2>今日の処方</h2>
+              </div>
+              <button class="icon-button" id="refreshPlan" title="再提案" aria-label="再提案">↻</button>
+            </div>
+
+            <div class="readiness-strip">
+              <div><span>Readiness</span><strong id="readinessScore">-</strong><small id="readinessText">判定中</small></div>
+              <div><span>空き日数</span><strong id="daysOff">-</strong><small>最後の筋トレから</small></div>
+              <div><span>薄い部位</span><strong id="priorityPart">-</strong><small>次に入れたい</small></div>
+              <div><span>ベンチ推定</span><strong id="benchMax">-</strong><small>最高1RM</small></div>
+            </div>
+
+            <div class="plan-card" id="planCard"></div>
+          </article>
+        </section>
+      </section>
+
+      <section class="app-view" id="programView">
+        <header class="page-header">
+          <p class="eyebrow">4 week program</p>
+          <h1>初心者向け 週3プログラム</h1>
+          <p class="lead">フォーム習得、筋肥大、怪我予防を優先。最初の4週間は「やり切れる強度」で勝ち癖を作る。</p>
+        </header>
+        <div class="program-grid" id="programGrid"></div>
+      </section>
+
+      <section class="app-view" id="workoutView">
+        <header class="page-header compact">
+          <p class="eyebrow">Workout player</p>
+          <h1>動画を見ながら進める</h1>
+          <p class="lead">種目をクリックすると、動画枠とフォーム注意点が切り替わります。</p>
+        </header>
+        <div class="player-layout">
+          <article class="panel">
+            <div class="video-frame">
+              <iframe id="videoFrame" title="種目動画" src="https://www.youtube.com/embed?listType=search&list=bench%20press%20beginner%20form" allowfullscreen></iframe>
+            </div>
+            <div class="video-actions">
+              <a id="videoSearchLink" target="_blank" rel="noreferrer">YouTubeで開く</a>
+              <button class="secondary-button" id="markExerciseDone">完了</button>
+            </div>
+            <div class="cue-box" id="cueBox"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="label">Today session</p>
+                <h2>順番通りにやる</h2>
+              </div>
+            </div>
+            <div class="workout-steps" id="workoutSteps"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="app-view" id="libraryView">
+        <header class="page-header compact">
+          <p class="eyebrow">Exercise library</p>
+          <h1>種目図鑑</h1>
+          <p class="lead">初心者がミスりやすいポイントを、イラストと動画導線で確認。</p>
+        </header>
+        <div class="exercise-grid" id="exerciseLibrary"></div>
+      </section>
+
+      <section class="app-view" id="logView">
+        <header class="page-header compact">
+          <p class="eyebrow">Training log</p>
+          <h1>記録センター</h1>
+          <p class="lead">今日でも過去日でも、筋トレ・休養・体調メモを同じ場所から残せます。</p>
+        </header>
+        <section class="work-grid">
+          <article class="panel log-panel">
+            <div class="field three-col">
+              <label>日付<input id="logDate" type="date" /></label>
+              <label>時間<input id="logTime" type="time" /></label>
+              <label>種別<select id="sessionType"><option value="training">筋トレ</option><option value="rest">休養</option><option value="condition">体調メモ</option></select></label>
+            </div>
+            <div class="entry-table" id="exerciseRows"></div>
+            <button class="secondary-button" id="addExerciseRow">＋ 種目を追加</button>
+            <div class="quick-buttons">
+              <button data-template="ベンチ60×8、60×8、65×5">ベンチ</button>
+              <button data-template="ラットプル50×10、50×10、42.5×12">ラット</button>
+              <button data-template="スクワット70×10、80×8、80×10">スクワット</button>
+              <button id="markRestDay" type="button">休養日</button>
+            </div>
+            <textarea id="memoInput" placeholder="メモ: 肩は少し違和感、飲酒あり、フォーム良かった など"></textarea>
+            <button class="primary-button" id="saveLog">記録する</button>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header"><div><p class="label">Missed days</p><h2>書き忘れチェック</h2></div></div>
+            <div class="missed-list" id="missedList"></div>
+          </article>
+        </section>
+      </section>
+
+      <section class="app-view" id="historyView">
+        <header class="page-header compact">
+          <p class="eyebrow">Progress</p>
+          <h1>履歴と改善ポイント</h1>
+          <p class="lead">続けるほど、次の提案が自分専用になります。</p>
+        </header>
+        <section class="work-grid bottom">
+          <article class="panel">
+            <div class="panel-header"><div><p class="label">Balance</p><h2>部位バランス</h2></div></div>
+            <canvas id="volumeChart" width="720" height="300" aria-label="部位別ボリュームグラフ"></canvas>
+          </article>
+          <article class="panel">
+            <div class="panel-header"><div><p class="label">Coach notes</p><h2>次の改善ポイント</h2></div></div>
+            <div class="coach-notes" id="coachNotes"></div>
+          </article>
+          <article class="panel history-wide">
+            <div class="panel-header">
+              <div><p class="label">History</p><h2>最近の記録</h2></div>
+              <button class="text-button" id="clearLocal">追加分を消す</button>
+            </div>
+            <div class="history-list" id="historyList"></div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      window.__appErrors = [];
+      window.addEventListener("error", (event) => {
+        window.__appErrors.push(`${event.message} at ${event.filename}:${event.lineno}`);
+      });
+    </script>
+    <script src="app.js"></script>
+  </body>
+</html>
