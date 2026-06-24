@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>購入者限定のご案内</title>
+    <style>
+      :root {
+        --bg: #0f0e15;
+        --panel: #16141f;
+        --line: #2e2a42;
+        --text: #f5f3ff;
+        --muted: #a99fc4;
+        --accent: #c084fc;
+        --accent2: #e879f9;
+        --gold: #f9d976;
+        --cta: #7c3aed;
+        --cta-hover: #6d28d9;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", sans-serif;
+        line-height: 1.7;
+      }
+
+      .page {
+        width: min(680px, calc(100vw - 24px));
+        margin: 0 auto;
+        padding: 48px 0 64px;
+      }
+
+      /* --- Top badge --- */
+      .badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(192,132,252,.22), rgba(232,121,249,.22));
+        border: 1px solid rgba(192,132,252,.45);
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        margin-bottom: 20px;
+      }
+
+      /* --- Thank you block --- */
+      .thank-you {
+        padding: 28px 24px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(192,132,252,.08), transparent 60%), var(--panel);
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .course-name {
+        font-size: 15px;
+        color: var(--gold);
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .thank-you h1 {
+        font-size: clamp(22px, 5vw, 30px);
+        line-height: 1.45;
+        font-weight: 900;
+        margin-bottom: 0;
+      }
+
+      /* --- Alert block --- */
+      .alert-block {
+        padding: 20px 24px;
+        border: 1px solid rgba(249,217,118,.35);
+        border-radius: 12px;
+        background: rgba(249,217,118,.06);
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .alert-block p {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--gold);
+        margin-bottom: 0;
+        line-height: 1.65;
+      }
+
+      /* --- Arrows --- */
+      .arrows {
+        text-align: center;
+        font-size: 22px;
+        letter-spacing: 2px;
+        color: var(--accent2);
+        margin-bottom: 20px;
+        line-height: 1.3;
+      }
+
+      /* --- Video --- */
+      .video-wrap {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #000;
+        margin-bottom: 28px;
+      }
+
+      .video-wrap iframe {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      /* --- Divider --- */
+      .divider {
+        height: 1px;
+        background: var(--line);
+        margin: 28px 0;
+      }
+
+      /* --- PDF link --- */
+      .pdf-section {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .pdf-section p {
+        font-size: 15px;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+
+      .pdf-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border: 1px solid rgba(192,132,252,.5);
+        border-radius: 8px;
+        background: rgba(192,132,252,.08);
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: background .2s, border-color .2s;
+      }
+
+      .pdf-link:hover {
+        background: rgba(192,132,252,.16);
+        border-color: var(--accent);
+      }
+
+      .pdf-link svg {
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+      }
+
+      /* --- CTA --- */
+      .cta-section {
+        text-align: center;
+      }
+
+      .cta-section p {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        line-height: 1.6;
+      }
+
+      .cta-button {
+        display: block;
+        width: 100%;
+        padding: 20px 16px;
+        border: 0;
+        border-radius: 12px;
+        background: linear-gradient(90deg, #7c3aed, #a21caf);
+        color: #fff;
+        font-size: 18px;
+        font-weight: 900;
+        text-decoration: none;
+        text-align: center;
+        letter-spacing: .04em;
+        cursor: pointer;
+        box-shadow: 0 4px 24px rgba(124,58,237,.4);
+        transition: opacity .2s, box-shadow .2s;
+      }
+
+      .cta-button:hover {
+        opacity: .92;
+        box-shadow: 0 6px 32px rgba(124,58,237,.55);
+      }
+
+      .cta-note {
+        margin-top: 12px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* --- Limited badge --- */
+      .limited-banner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 8px;
+        background: rgba(249,217,118,.08);
+        border: 1px solid rgba(249,217,118,.25);
+        margin-bottom: 20px;
+        font-size: 13px;
+        color: var(--gold);
+        font-weight: 700;
+      }
+
+      .limited-banner::before {
+        content: "⚠";
+        font-size: 15px;
+      }
+
+      @media (max-width: 480px) {
+        .page { padding: 32px 0 48px; }
+        .thank-you { padding: 22px 16px; }
+        .alert-block { padding: 16px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+
+      <div style="text-align:center;">
+        <span class="badge">購入者限定 ・ 重要なお知らせ</span>
+      </div>
+
+      <!-- Thank you -->
+      <div class="thank-you">
+        <p class="course-name">アウェイクニングタロット&amp;ダイアリー講座</p>
+        <h1>ご参加いただき<br>ありがとうございます！</h1>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert-block">
+        <p>購入者限定の重要なお知らせがあります。<br>まずこちらの動画をご視聴ください。</p>
+      </div>
+
+      <!-- Arrows -->
+      <div class="arrows">↓&nbsp;↓&nbsp;↓&nbsp;↓&nbsp;↓&nbsp;↓&nbsp;↓</div>
+
+      <!-- Video -->
+      <div class="video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/4FigaPwaLtw"
+          title="購入者限定動画"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- PDF link -->
+      <div class="pdf-section">
+        <p>商品の詳細はこちらをご確認ください</p>
+        <a
+          href="https://drive.google.com/file/d/1AdvAWlJgcwNCI6G2BJsPCs7vtSimOulQ/view?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="pdf-link"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          商品説明はこちら（PDF）
+        </a>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <div class="limited-banner">このページ限定のご案内です</div>
+        <p>サポート付きコースに参加される方は<br>こちらからお申し込みください</p>
+        <a
+          href="https://liff.line.me/1657505103-MKl5zEBo/landing?follow=%40582pekqp&lp=FwWwWE&liff_id=1657505103-MKl5zEBo"
+          class="cta-button"
+        >
+          サポート付きコースに参加する →
+        </a>
+        <p class="cta-note">※ご不明な点はLINEよりお気軽にお問い合わせください</p>
+      </div>
+
+    </div>
+  </body>
+</html>
