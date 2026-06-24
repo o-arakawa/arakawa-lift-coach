@@ -1,303 +1,887 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>購入者限定のご案内</title>
-    <style>
-      :root {
-        --bg: #0f0e15;
-        --panel: #16141f;
-        --line: #2e2a42;
-        --text: #f5f3ff;
-        --muted: #a99fc4;
-        --accent: #c084fc;
-        --accent2: #e879f9;
-        --gold: #f9d976;
-        --cta: #7c3aed;
-        --cta-hover: #6d28d9;
-      }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>購入者限定のご案内｜星占いの学校</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap');
 
-      * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", sans-serif;
-        line-height: 1.7;
-      }
+    :root {
+      --cosmos: #060412;
+      --deep:   #0d0a1f;
+      --panel:  rgba(18, 12, 40, 0.85);
+      --line:   rgba(160, 130, 255, 0.18);
+      --text:   #f0ecff;
+      --muted:  #a89fc8;
+      --gold:   #e8c96a;
+      --gold2:  #fde68a;
+      --purple: #9b59f5;
+      --violet: #7c3aed;
+      --rose:   #e879f9;
+      --cta:    linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #e879f9 100%);
+      --glow:   0 0 40px rgba(155, 89, 245, 0.35);
+    }
 
-      .page {
-        width: min(680px, calc(100vw - 24px));
-        margin: 0 auto;
-        padding: 48px 0 64px;
-      }
+    html { scroll-behavior: smooth; }
 
-      /* --- Top badge --- */
-      .badge {
-        display: inline-block;
-        padding: 6px 16px;
-        border-radius: 999px;
-        background: linear-gradient(90deg, rgba(192,132,252,.22), rgba(232,121,249,.22));
-        border: 1px solid rgba(192,132,252,.45);
-        color: var(--accent);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: .06em;
-        margin-bottom: 20px;
-      }
+    body {
+      background: var(--cosmos);
+      color: var(--text);
+      font-family: 'Noto Serif JP', 'Hiragino Mincho Pro', serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-      /* --- Thank you block --- */
-      .thank-you {
-        padding: 28px 24px;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        background: linear-gradient(135deg, rgba(192,132,252,.08), transparent 60%), var(--panel);
-        text-align: center;
-        margin-bottom: 28px;
-      }
+    /* ── Starfield ── */
+    #stars-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-      .course-name {
-        font-size: 15px;
-        color: var(--gold);
-        font-weight: 700;
-        margin-bottom: 12px;
-      }
+    /* ── Nebula bg ── */
+    .nebula {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 20%, rgba(124,58,237,.22) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 70% at 85% 80%, rgba(232,121,249,.14) 0%, transparent 65%),
+        radial-gradient(ellipse 80% 40% at 50% 50%, rgba(30,15,70,.8) 0%, transparent 100%);
+      pointer-events: none;
+    }
 
-      .thank-you h1 {
-        font-size: clamp(22px, 5vw, 30px);
-        line-height: 1.45;
-        font-weight: 900;
-        margin-bottom: 0;
-      }
+    /* ── Page wrapper ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(720px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 60px 0 80px;
+    }
 
-      /* --- Alert block --- */
-      .alert-block {
-        padding: 20px 24px;
-        border: 1px solid rgba(249,217,118,.35);
-        border-radius: 12px;
-        background: rgba(249,217,118,.06);
-        text-align: center;
-        margin-bottom: 10px;
-      }
+    /* ── Deco line ── */
+    .deco-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--gold);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .deco-line::before,
+    .deco-line::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      max-width: 120px;
+    }
 
-      .alert-block p {
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--gold);
-        margin-bottom: 0;
-        line-height: 1.65;
-      }
+    /* ── Badge ── */
+    .badge {
+      display: inline-block;
+      padding: 5px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(232,201,106,.5);
+      background: rgba(232,201,106,.08);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: .18em;
+      margin-bottom: 28px;
+    }
 
-      /* --- Arrows --- */
-      .arrows {
-        text-align: center;
-        font-size: 22px;
-        letter-spacing: 2px;
-        color: var(--accent2);
-        margin-bottom: 20px;
-        line-height: 1.3;
-      }
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      margin-bottom: 52px;
+    }
 
-      /* --- Video --- */
-      .video-wrap {
-        position: relative;
-        width: 100%;
-        padding-top: 56.25%;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid var(--line);
-        background: #000;
-        margin-bottom: 28px;
-      }
+    .hero-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(13px, 2.5vw, 16px);
+      color: var(--gold);
+      letter-spacing: .25em;
+      margin-bottom: 16px;
+      font-style: italic;
+    }
 
-      .video-wrap iframe {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-      }
+    .hero-title {
+      font-size: clamp(26px, 5.5vw, 44px);
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 30%, var(--gold2) 70%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-      /* --- Divider --- */
-      .divider {
-        height: 1px;
-        background: var(--line);
-        margin: 28px 0;
-      }
+    .hero-sub {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.9;
+    }
 
-      /* --- PDF link --- */
-      .pdf-section {
-        text-align: center;
-        margin-bottom: 28px;
-      }
+    /* ── Tarot card deco ── */
+    .tarot-deco {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin: 32px 0;
+    }
 
-      .pdf-section p {
-        font-size: 15px;
-        color: var(--muted);
-        margin-bottom: 14px;
-      }
+    .tarot-card {
+      width: 54px;
+      height: 90px;
+      border-radius: 6px;
+      border: 1px solid rgba(232,201,106,.35);
+      background: linear-gradient(160deg, rgba(124,58,237,.25), rgba(15,10,40,.8));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 20px rgba(124,58,237,.25);
+      transition: transform .3s;
+    }
 
-      .pdf-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 24px;
-        border: 1px solid rgba(192,132,252,.5);
-        border-radius: 8px;
-        background: rgba(192,132,252,.08);
-        color: var(--accent);
-        text-decoration: none;
-        font-weight: 700;
-        font-size: 15px;
-        transition: background .2s, border-color .2s;
-      }
+    .tarot-card:nth-child(1) { transform: rotate(-6deg) translateY(4px); }
+    .tarot-card:nth-child(2) { transform: rotate(0deg); }
+    .tarot-card:nth-child(3) { transform: rotate(6deg) translateY(4px); }
 
-      .pdf-link:hover {
-        background: rgba(192,132,252,.16);
-        border-color: var(--accent);
-      }
+    /* ── Alert card ── */
+    .alert-card {
+      padding: 28px 32px;
+      border-radius: 16px;
+      border: 1px solid rgba(232,201,106,.35);
+      background: linear-gradient(135deg, rgba(232,201,106,.07), rgba(15,10,40,.6));
+      text-align: center;
+      margin-bottom: 36px;
+      position: relative;
+      overflow: hidden;
+    }
 
-      .pdf-link svg {
-        flex-shrink: 0;
-        width: 18px;
-        height: 18px;
-      }
+    .alert-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: radial-gradient(circle at 50% 0%, rgba(232,201,106,.1), transparent 60%);
+      pointer-events: none;
+    }
 
-      /* --- CTA --- */
-      .cta-section {
-        text-align: center;
-      }
+    .alert-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
 
-      .cta-section p {
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 16px;
-        line-height: 1.6;
-      }
+    .alert-title {
+      font-size: clamp(17px, 3.5vw, 22px);
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1.55;
+      margin-bottom: 8px;
+    }
 
-      .cta-button {
-        display: block;
-        width: 100%;
-        padding: 20px 16px;
-        border: 0;
-        border-radius: 12px;
-        background: linear-gradient(90deg, #7c3aed, #a21caf);
-        color: #fff;
-        font-size: 18px;
-        font-weight: 900;
-        text-decoration: none;
-        text-align: center;
-        letter-spacing: .04em;
-        cursor: pointer;
-        box-shadow: 0 4px 24px rgba(124,58,237,.4);
-        transition: opacity .2s, box-shadow .2s;
-      }
+    .alert-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
 
-      .cta-button:hover {
-        opacity: .92;
-        box-shadow: 0 6px 32px rgba(124,58,237,.55);
-      }
+    /* ── Arrow ── */
+    .arrow-down {
+      text-align: center;
+      margin: 24px 0;
+    }
 
-      .cta-note {
-        margin-top: 12px;
-        font-size: 13px;
-        color: var(--muted);
-      }
+    .arrow-down svg {
+      animation: bounce 1.8s ease-in-out infinite;
+    }
 
-      /* --- Limited badge --- */
-      .limited-banner {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 10px 16px;
-        border-radius: 8px;
-        background: rgba(249,217,118,.08);
-        border: 1px solid rgba(249,217,118,.25);
-        margin-bottom: 20px;
-        font-size: 13px;
-        color: var(--gold);
-        font-weight: 700;
-      }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
 
-      .limited-banner::before {
-        content: "⚠";
-        font-size: 15px;
-      }
+    /* ── Video section ── */
+    .video-section {
+      margin-bottom: 52px;
+    }
 
-      @media (max-width: 480px) {
-        .page { padding: 32px 0 48px; }
-        .thank-you { padding: 22px 16px; }
-        .alert-block { padding: 16px; }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="page">
+    .section-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 10px;
+      text-align: center;
+    }
 
-      <div style="text-align:center;">
-        <span class="badge">購入者限定 ・ 重要なお知らせ</span>
+    .video-frame {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--glow), 0 20px 60px rgba(0,0,0,.6);
+    }
+
+    .video-frame::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(155,89,245,.4), transparent 40%, rgba(232,121,249,.3));
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .video-aspect {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+    }
+
+    .video-aspect iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* ── Divider ── */
+    .star-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 48px 0;
+      color: rgba(232,201,106,.5);
+      font-size: 10px;
+      letter-spacing: .5em;
+    }
+
+    .star-divider::before,
+    .star-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(232,201,106,.3), transparent);
+    }
+
+    /* ── Benefits section ── */
+    .benefits-section {
+      margin-bottom: 52px;
+    }
+
+    .benefits-title {
+      text-align: center;
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff, var(--gold2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .benefits-sub {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      letter-spacing: .04em;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .benefit-card {
+      padding: 22px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+      transition: border-color .3s, transform .3s;
+    }
+
+    .benefit-card:hover {
+      border-color: rgba(155,89,245,.4);
+      transform: translateY(-3px);
+    }
+
+    .benefit-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--violet), var(--rose));
+      border-radius: 12px 12px 0 0;
+    }
+
+    .benefit-icon {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .benefit-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .benefit-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* ── Timeline ── */
+    .timeline-section {
+      margin-bottom: 52px;
+    }
+
+    .timeline-title {
+      text-align: center;
+      font-size: clamp(18px, 3.5vw, 24px);
+      font-weight: 700;
+      margin-bottom: 28px;
+      color: var(--text);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 26px;
+      left: calc(50% / 3);
+      right: calc(50% / 3);
+      height: 1px;
+      background: linear-gradient(90deg, var(--violet), var(--rose));
+    }
+
+    .timeline-step {
+      text-align: center;
+      padding: 0 8px;
+      position: relative;
+    }
+
+    .step-dot {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet), var(--rose));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 20px;
+      box-shadow: 0 0 20px rgba(155,89,245,.4);
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-month {
+      font-size: 11px;
+      color: var(--purple);
+      letter-spacing: .1em;
+      margin-bottom: 4px;
+    }
+
+    .step-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    /* ── PDF section ── */
+    .pdf-section {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .pdf-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 28px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      text-decoration: none;
+      transition: border-color .3s, box-shadow .3s, transform .3s;
+      max-width: 100%;
+    }
+
+    .pdf-card:hover {
+      border-color: rgba(155,89,245,.5);
+      box-shadow: 0 8px 32px rgba(124,58,237,.2);
+      transform: translateY(-2px);
+    }
+
+    .pdf-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(124,58,237,.3), rgba(232,121,249,.2));
+      border: 1px solid rgba(155,89,245,.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 22px;
+    }
+
+    .pdf-text {
+      text-align: left;
+    }
+
+    .pdf-label {
+      font-size: 11px;
+      color: var(--purple);
+      letter-spacing: .12em;
+      margin-bottom: 4px;
+    }
+
+    .pdf-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pdf-arrow {
+      color: var(--muted);
+      font-size: 18px;
+      margin-left: 8px;
+    }
+
+    /* ── CTA section ── */
+    .cta-section {
+      position: relative;
+    }
+
+    .cta-glow-bg {
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(ellipse at 50% 50%, rgba(124,58,237,.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-card {
+      position: relative;
+      padding: 40px 32px;
+      border-radius: 20px;
+      border: 1px solid rgba(155,89,245,.35);
+      background: linear-gradient(160deg, rgba(20,12,50,.9), rgba(10,6,25,.95));
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--violet), var(--rose), var(--violet), transparent);
+    }
+
+    .cta-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% -10%, rgba(155,89,245,.12), transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-eyebrow {
+      font-size: 12px;
+      letter-spacing: .22em;
+      color: var(--purple);
+      margin-bottom: 12px;
+    }
+
+    .cta-title {
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 700;
+      line-height: 1.55;
+      margin-bottom: 8px;
+    }
+
+    .cta-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 28px;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto 16px;
+      padding: 22px 20px;
+      border-radius: 14px;
+      background: var(--cta);
+      color: #fff;
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(16px, 3vw, 19px);
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: .04em;
+      box-shadow: 0 6px 40px rgba(124,58,237,.5), 0 2px 8px rgba(0,0,0,.3);
+      transition: opacity .2s, box-shadow .2s, transform .2s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button:hover {
+      opacity: .93;
+      box-shadow: 0 10px 50px rgba(124,58,237,.65), 0 2px 8px rgba(0,0,0,.3);
+      transform: translateY(-2px);
+    }
+
+    .cta-sub {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Limited timer bar ── */
+    .limited-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(232,201,106,.3);
+      background: rgba(232,201,106,.06);
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: pulse-red 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-red {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(1.3); }
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(168,159,200,.4);
+      letter-spacing: .08em;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 540px) {
+      .page { padding: 40px 0 60px; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: 1fr; gap: 16px; }
+      .timeline::before { display: none; }
+      .timeline-step { display: flex; gap: 16px; text-align: left; }
+      .step-dot { flex-shrink: 0; }
+      .alert-card { padding: 22px 18px; }
+      .cta-card { padding: 28px 20px; }
+      .pdf-card { flex-direction: column; text-align: center; }
+      .pdf-text { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Starfield canvas -->
+  <canvas id="stars-canvas"></canvas>
+  <div class="nebula"></div>
+
+  <div class="page">
+
+    <!-- ── Hero ── -->
+    <div class="hero">
+      <div style="text-align:center; margin-bottom:12px;">
+        <span class="badge">✦ 購入者限定のご案内 ✦</span>
       </div>
 
-      <!-- Thank you -->
-      <div class="thank-you">
-        <p class="course-name">アウェイクニングタロット&amp;ダイアリー講座</p>
-        <h1>ご参加いただき<br>ありがとうございます！</h1>
+      <div class="deco-line">Awakening Tarot &amp; Diary</div>
+
+      <p class="hero-eyebrow">星占いの学校より</p>
+
+      <h1 class="hero-title">
+        アウェイクニングタロット<br>&amp;ダイアリー講座へ<br>ご参加いただき<br>ありがとうございます
+      </h1>
+
+      <p class="hero-sub">
+        この度はご参加いただき、誠にありがとうございます。<br>
+        ここだけの大切なご案内がございます。
+      </p>
+
+      <!-- Tarot card decoration -->
+      <div class="tarot-deco">
+        <div class="tarot-card">🌙</div>
+        <div class="tarot-card">✨</div>
+        <div class="tarot-card">⭐</div>
       </div>
+    </div>
 
-      <!-- Alert -->
-      <div class="alert-block">
-        <p>購入者限定の重要なお知らせがあります。<br>まずこちらの動画をご視聴ください。</p>
+    <!-- ── Alert ── -->
+    <div class="alert-card">
+      <div class="alert-icon">📩</div>
+      <p class="alert-title">
+        購入者限定の<br>重要なお知らせがございます
+      </p>
+      <p class="alert-desc">
+        こちらの動画を最後までご視聴ください。<br>
+        あなたの占い師デビューに関わる、大切な内容です。
+      </p>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-down">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 8 L20 32" stroke="url(#ag)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M12 24 L20 32 L28 24" stroke="url(#ag)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="ag" x1="20" y1="8" x2="20" y2="32" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#9b59f5" stop-opacity="0.3"/>
+            <stop offset="1" stop-color="#e8c96a"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <!-- ── Video ── -->
+    <div class="video-section">
+      <p class="section-label">✦ Special Video ✦</p>
+      <div class="video-frame">
+        <div class="video-aspect">
+          <iframe
+            src="https://www.youtube.com/embed/4FigaPwaLtw"
+            title="購入者限定動画"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
       </div>
+    </div>
 
-      <!-- Arrows -->
-      <div class="arrows">↓&nbsp;↓&nbsp;↓&nbsp;↓&nbsp;↓&nbsp;↓&nbsp;↓</div>
+    <!-- Divider -->
+    <div class="star-divider">✦ ✦ ✦</div>
 
-      <!-- Video -->
-      <div class="video-wrap">
-        <iframe
-          src="https://www.youtube.com/embed/4FigaPwaLtw"
-          title="購入者限定動画"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+    <!-- ── Benefits ── -->
+    <div class="benefits-section">
+      <p class="section-label">✦ Support Course ✦</p>
+      <h2 class="benefits-title">サポート付きコースで<br>できること</h2>
+      <p class="benefits-sub">占い師デビューまでの全ステップを、プロが伴走します</p>
+
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">📞</div>
+          <p class="benefit-name">電話・対面占い<br>鑑定方法コンテンツ</p>
+          <p class="benefit-desc">電話占いスタートの流れと鑑定のコツを、テキスト＆動画で丁寧に解説。</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🎭</div>
+          <p class="benefit-name">ロープレ練習<br>&amp; 内部オーディション</p>
+          <p class="benefit-desc">合格まで何度でも受けられる内部オーディション。仲間と本番さながらの練習が可能です。</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🏢</div>
+          <p class="benefit-name">大手占い会社への<br>オーディション紹介</p>
+          <p class="benefit-desc">みんなの電話占い・占いのアリーナ・ウィル・ピュアリなど有名社への紹介あり。</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">💬</div>
+          <p class="benefit-name">LINE質問権 &amp;<br>毎月Zoomセミナー</p>
+          <p class="benefit-desc">いつでもLINEで質問OK。月次Zoom鑑定ロープレ会・タロット勉強会にも参加できます。</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🌸</div>
+          <p class="benefit-name">コミュニティ &amp;<br>全国支部会参加権</p>
+          <p class="benefit-desc">東京・愛知・長野・北陸・関西の各支部会や、オンラインイベントへ参加できます。</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🎓</div>
+          <p class="benefit-name">修了認定書 &amp;<br>デビュー保証</p>
+          <p class="benefit-desc">条件達成で認定書をご自宅へお届け。オーディション突破ノウハウも完全伝授します。</p>
+        </div>
       </div>
+    </div>
 
-      <div class="divider"></div>
+    <!-- Divider -->
+    <div class="star-divider">✦ ✦ ✦</div>
 
-      <!-- PDF link -->
-      <div class="pdf-section">
-        <p>商品の詳細はこちらをご確認ください</p>
-        <a
-          href="https://drive.google.com/file/d/1AdvAWlJgcwNCI6G2BJsPCs7vtSimOulQ/view?usp=sharing"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="pdf-link"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-          </svg>
-          商品説明はこちら（PDF）
-        </a>
+    <!-- ── Timeline ── -->
+    <div class="timeline-section">
+      <p class="section-label">✦ Timeline ✦</p>
+      <h2 class="timeline-title">最短3ヶ月で<br>占い師デビュー</h2>
+
+      <div class="timeline">
+        <div class="timeline-step">
+          <div class="step-dot">📖</div>
+          <p class="step-month">1〜1.5ヶ月</p>
+          <p class="step-label">タロット座学<br>&amp; ロープレ練習</p>
+        </div>
+        <div class="timeline-step">
+          <div class="step-dot">🎯</div>
+          <p class="step-month">2〜3ヶ月</p>
+          <p class="step-label">会社へエントリー<br>オーディション挑戦</p>
+        </div>
+        <div class="timeline-step">
+          <div class="step-dot">⭐</div>
+          <p class="step-month">3ヶ月目</p>
+          <p class="step-label">占い師として<br>デビュー！</p>
+        </div>
       </div>
+    </div>
 
-      <div class="divider"></div>
+    <!-- Divider -->
+    <div class="star-divider">✦ ✦ ✦</div>
 
-      <!-- CTA -->
-      <div class="cta-section">
-        <div class="limited-banner">このページ限定のご案内です</div>
-        <p>サポート付きコースに参加される方は<br>こちらからお申し込みください</p>
+    <!-- ── PDF ── -->
+    <div class="pdf-section">
+      <p class="section-label" style="margin-bottom:16px;">✦ Document ✦</p>
+      <a
+        href="https://drive.google.com/file/d/1AdvAWlJgcwNCI6G2BJsPCs7vtSimOulQ/view?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="pdf-card"
+      >
+        <div class="pdf-icon">📋</div>
+        <div class="pdf-text">
+          <p class="pdf-label">COURSE DETAILS</p>
+          <p class="pdf-name">サポート付きコース<br>商品説明はこちら</p>
+        </div>
+        <span class="pdf-arrow">→</span>
+      </a>
+    </div>
+
+    <!-- ── CTA ── -->
+    <div class="cta-section">
+      <div class="cta-glow-bg"></div>
+      <div class="cta-card">
+        <div class="limited-bar">
+          <div class="pulse-dot"></div>
+          このページ限定のご案内です
+        </div>
+
+        <p class="cta-eyebrow">✦ JOIN NOW ✦</p>
+        <h2 class="cta-title">
+          サポート付きコースで<br>占い師デビューを目指す
+        </h2>
+        <p class="cta-desc">
+          動画をご視聴いただいた方限定のご案内です。<br>
+          サポート付きコースへの参加は、<br>こちらのボタンからお申し込みください。
+        </p>
+
         <a
           href="https://liff.line.me/1657505103-MKl5zEBo/landing?follow=%40582pekqp&lp=FwWwWE&liff_id=1657505103-MKl5zEBo"
           class="cta-button"
         >
           サポート付きコースに参加する →
         </a>
-        <p class="cta-note">※ご不明な点はLINEよりお気軽にお問い合わせください</p>
-      </div>
 
+        <p class="cta-sub">
+          ※ ご不明な点はLINEよりお気軽にお問い合わせください<br>
+          ※ 受講期間は3ヶ月です
+        </p>
+      </div>
     </div>
-  </body>
+
+    <!-- ── Footer ── -->
+    <div class="footer">
+      <p>星占いの学校 ／ ブループラネット合同会社</p>
+    </div>
+
+  </div>
+
+  <!-- ── Starfield JS ── -->
+  <script>
+    (function () {
+      const canvas = document.getElementById('stars-canvas');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      const STAR_COUNT = 180;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      function init() {
+        resize();
+        stars = [];
+        for (let i = 0; i < STAR_COUNT; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.4 + 0.2,
+            o: Math.random() * 0.7 + 0.1,
+            speed: Math.random() * 0.4 + 0.05,
+            phase: Math.random() * Math.PI * 2,
+          });
+        }
+      }
+
+      function draw(t) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+          const flicker = s.o * (0.7 + 0.3 * Math.sin(t / 900 * s.speed + s.phase));
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(240,236,255,${flicker})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', init);
+      init();
+      requestAnimationFrame(draw);
+    })();
+  </script>
+
+</body>
 </html>
