@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: 'NSansJP'; src: url('../../fonts/NotoSansJP.ttf'); }
+@font-face { font-family: 'NSerifJP'; src: url('../../fonts/NotoSerifJP.ttf'); }
+html, body { margin: 0; width: 1600px; height: 2560px; overflow: hidden; }
+body { background: #f4efe6; color: #141414; font-family: 'NSansJP', sans-serif; position: relative; }
+/* route line motif */
+.route { position: absolute; inset: 0; }
+/* accent block bottom */
+.band { position: absolute; left: 0; right: 0; bottom: 0; height: 520px; background: #141414; }
+.title-wrap { position: absolute; top: 200px; right: 130px; writing-mode: vertical-rl; text-orientation: mixed; height: 1500px; }
+.title { font-size: {{TITLE_SIZE}}px; font-weight: 900; letter-spacing: 0.04em; line-height: 1.12; margin: 0; }
+.title .accent { color: #e2461c; }
+.subtitle-wrap { position: absolute; top: 230px; left: 130px; writing-mode: vertical-rl; height: 1400px; }
+.subtitle { font-size: 54px; font-weight: 700; letter-spacing: 0.08em; line-height: 1.6; margin: 0; }
+.catch { position: absolute; left: 130px; top: 1740px; width: 1340px; font-family: 'NSerifJP', serif; font-size: 44px; font-weight: 600; line-height: 1.7; color: #141414; }
+.author { position: absolute; left: 130px; bottom: 150px; color: #f4efe6; font-size: 64px; font-weight: 700; letter-spacing: 0.15em; }
+.author small { display: block; font-size: 28px; font-weight: 400; letter-spacing: 0.3em; margin-bottom: 18px; color: #c9c2b5; }
+.tag { position: absolute; right: 130px; bottom: 170px; color: #f4efe6; font-size: 34px; letter-spacing: 0.2em; border: 3px solid #f4efe6; padding: 18px 34px; }
+</style>
+</head>
+<body>
+<svg class="route" viewBox="0 0 1600 2560" xmlns="http://www.w3.org/2000/svg">
+  <path d="M -50 2150 C 250 1900, 300 1500, 620 1420 S 1100 1250, 1250 900 S 1500 500, 1700 380" fill="none" stroke="#e2461c" stroke-width="14" stroke-dasharray="2 44" stroke-linecap="round"/>
+  <circle cx="620" cy="1420" r="34" fill="#e2461c"/>
+  <circle cx="620" cy="1420" r="14" fill="#f4efe6"/>
+  <circle cx="1250" cy="900" r="22" fill="#141414"/>
+</svg>
+<div class="title-wrap"><h1 class="title">{{TITLE_HTML}}</h1></div>
+<div class="subtitle-wrap"><p class="subtitle">{{SUBTITLE}}</p></div>
+<div class="catch">{{CATCH}}</div>
+<div class="band"></div>
+<div class="author"><small>ARAKAWA OSAMU</small>{{AUTHOR}}</div>
+<div class="tag">{{TAG}}</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: 'NSansJP'; src: url('../../fonts/NotoSansJP.ttf'); }
+@font-face { font-family: 'NSerifJP'; src: url('../../fonts/NotoSerifJP.ttf'); }
+html, body { margin: 0; width: 1600px; height: 2560px; overflow: hidden; }
+body { background: #f3eee4; color: #141414; font-family: 'NSansJP', sans-serif; position: relative; }
+.route { position: absolute; inset: 0; }
+.band { position: absolute; left: 0; right: 0; bottom: 0; height: 500px; background: #141414; }
+.title-wrap { position: absolute; top: 170px; right: 110px; writing-mode: vertical-rl; text-orientation: mixed; height: 1600px; }
+.title { font-size: 222px; font-weight: 900; letter-spacing: 0.02em; line-height: 1.08; margin: 0; }
+.title .accent { color: #e2461c; }
+.subtitle-wrap { position: absolute; top: 200px; right: 640px; writing-mode: vertical-rl; height: 1500px; }
+.subtitle { font-size: 50px; font-weight: 700; letter-spacing: 0.1em; line-height: 1.7; margin: 0; color: #1f1f1f; }
+.catch { position: absolute; left: 110px; top: 1690px; width: 900px; font-family: 'NSerifJP', serif; font-size: 42px; font-weight: 600; line-height: 1.75; color: #141414; }
+.catch .line { display: inline-block; background: #f3eee4; padding: 0 10px; }
+.author { position: absolute; left: 110px; bottom: 140px; color: #f3eee4; font-size: 66px; font-weight: 700; letter-spacing: 0.18em; }
+.author small { display: block; font-size: 26px; font-weight: 400; letter-spacing: 0.32em; margin-bottom: 20px; color: #bdb5a7; }
+.tag { position: absolute; right: 110px; bottom: 175px; color: #f3eee4; font-size: 32px; letter-spacing: 0.18em; border: 3px solid #f3eee4; padding: 18px 34px; }
+.pin { position: absolute; }
+</style>
+</head>
+<body>
+<svg class="route" viewBox="0 0 1600 2560" xmlns="http://www.w3.org/2000/svg">
+  <path d="M -60 2020 C 140 1880, 200 1560, 330 1380 S 560 1140, 560 900 S 500 560, 640 330 S 740 130, 700 -40" fill="none" stroke="#e2461c" stroke-width="13" stroke-dasharray="2 42" stroke-linecap="round"/>
+  <circle cx="330" cy="1380" r="20" fill="#141414"/>
+  <circle cx="560" cy="900" r="36" fill="#e2461c"/>
+  <circle cx="560" cy="900" r="14" fill="#f3eee4"/>
+  <circle cx="640" cy="330" r="20" fill="#141414"/>
+</svg>
+<div class="title-wrap"><h1 class="title">歩きながら、<br>話す<span class="accent">だけ。</span></h1></div>
+<div class="subtitle-wrap"><p class="subtitle">パソコンを閉じて「脳みそ」を売る、<br>ミーティング男の働き方</p></div>
+<div class="catch"><span class="line">パソコンを閉じて、外に出よう。</span><br><span class="line">いい案は、たいてい道の上で生まれていた。</span></div>
+<div class="band"></div>
+<div class="author"><small>ARAKAWA OSAMU</small>荒川 理</div>
+<div class="tag">移動距離が、提案の質になる</div>
+</body>
+</html>
