@@ -36,6 +36,7 @@ out = ['# 著者確認リスト（出版前に荒川さん本人が確認する�
 pri = [a for a in plan['author_check_items'] if '最優先' in a or '実名' in a or '長倉' in a]
 rest = [a for a in plan['author_check_items'] if a not in pri and not a.startswith('[編集判断]')]
 notes = [a for a in plan['author_check_items'] if a.startswith('[編集判断]')]
+out += ['- [ ] 【最優先】まえがき（`preface.md`「編集者の長倉さんは、そう言った。」）と、おわりに（`afterword.md`「編集者の長倉さんへ。」）に、企画のきっかけをくれた編集者を **姓のみ「長倉さん」** で掲載しています。本人の掲載許可を取ってください。許可が取れない場合は両方を「ある編集者」に置き換えて再ビルドします。フルネーム（漢字）は本文に入れていません。']
 out += [f'- [ ] {a}' for a in pri]
 out += ['', '## B. エピソード・習慣・数字の事実確認（企画段階で洗い出したもの）']
 out += [f'- [ ] {a}' for a in rest]
