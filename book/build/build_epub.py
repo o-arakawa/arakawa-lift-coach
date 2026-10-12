@@ -23,10 +23,13 @@ def esc(s):
 
 def inline(s):
     # escape first, then apply inline marks
+    s = re.sub(r"<!--.*?-->", "", s)
     s = esc(s)
     s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
     s = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<em>\1</em>", s)
     s = re.sub(r"《《(.+?)》》", r'<span class="emph">\1</span>', s)  # bouten-style emphasis
+    s = re.sub(r"!\[([^\]]*)\]\(([^)\s]+)\)", r'<img class="inline-img" src="../images/\2" alt="\1"/>', s)
+    s = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2">\1</a>', s)
     return s
 
 def md_to_xhtml_body(md):
@@ -61,6 +64,9 @@ def md_to_xhtml_body(md):
         stripped = line.strip()
         if not stripped:
             flush_para(); flush_list(); flush_quote()
+            i += 1
+            continue
+        if stripped.startswith("<!--") and stripped.endswith("-->"):
             i += 1
             continue
         m = re.match(r"^(#{1,4})\s+(.*)$", stripped)
@@ -158,6 +164,9 @@ h1.toc-title, h1.simple-title { font-size: 1.4em; margin: 2em 0 1.2em; text-alig
 .profile p { text-indent: 0; margin: 0.4em 0; }
 .cover-body { margin: 0; padding: 0; text-align: center; }
 .cover-body img { max-width: 100%; max-height: 100%; }
+.inline-img { display: block; margin: 1em auto; width: 40%; max-width: 12em; }
+a { color: inherit; text-decoration: underline; }
+p.center { text-align: center; text-indent: 0; }
 """
 
 def build(ms_dir, out_path, cover_path=None):
@@ -230,6 +239,10 @@ def build(ms_dir, out_path, cover_path=None):
             etype = "backmatter afterword"
             h1 = f'<h1 class="chapter-title">{inline(ch["title"])}</h1>'
             label = ch["title"]
+        elif kind == "backmatter":
+            etype = "backmatter"
+            h1 = f'<h1 class="chapter-title">{inline(ch["title"])}</h1>'
+            label = ch["title"]
         else:
             etype = "bodymatter"
             h1 = f'<h1 class="chapter-title">{inline(ch["title"])}</h1>'
@@ -249,11 +262,20 @@ def build(ms_dir, out_path, cover_path=None):
         spine.append((cid, "yes"))
         nav_entries.append((href, label, [(f"{href}#{hid}", t) for hid, t in subs]))
 
+    # images referenced from the manuscript (e.g. QR code)
+    for img in sorted(set(re.findall(r"!\[[^\]]*\]\(([^)\s]+)\)", "".join(open(os.path.join(ms_dir, c["file"]), encoding="utf-8").read() for c in meta["chapters"])))):
+        src = os.path.join(ms_dir, img)
+        if os.path.exists(src):
+            files[f"OEBPS/images/{img}"] = open(src, "rb").read()
+            mt = "image/png" if img.lower().endswith(".png") else "image/jpeg"
+            items.append((f"img-{re.sub(r'[^A-Za-z0-9]', '-', img)}", f"images/{img}", mt, None))
     # colophon / author profile
     profile = meta.get("author_profile", "")
     col = XHTML_HEAD.format(title="奥付", etype="backmatter colophon") + '<section epub:type="colophon">'
     if profile:
         col += '<h1 class="simple-title">著者プロフィール</h1><div class="profile">' + "".join(f"<p>{inline(p)}</p>" for p in profile.split("\n") if p.strip()) + "</div>"
+    if meta.get("contact"):
+        col += f'<div class="profile"><p>{inline(meta["contact"])}</p></div>'
     col += f'<div class="colophon"><p class="booktitle">{esc(title)}' + (f"　{esc(subtitle)}" if subtitle else "") + "</p>"
     col += f"<p>{esc(date)}　初版発行</p><p>著者　{esc(author)}</p>"
     if meta.get("publisher"):

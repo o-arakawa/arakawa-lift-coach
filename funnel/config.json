@@ -1,0 +1,9 @@
+{
+ "AUTHOR": "荒川知哉",
+ "AUTHOR_ROMAJI": "Arakawa Tomoya",
+ "LP_URL": "https://o-arakawa.github.io/arakawa-lift-coach/arukinagara/",
+ "LINE_URL": "https://lin.ee/XXXXXXX",
+ "SALES_URL": "https://example.com/sales",
+ "BOOK_URL": "https://www.amazon.co.jp/dp/XXXXXXXXXX",
+ "_note": "LINE_URL / SALES_URL / BOOK_URL は著者が取得後に差し替え、funnel/build/apply_config.py を実行する。LP_URL は GitHub Pages の既定URL（カスタムドメインがあれば変更）。"
+}
