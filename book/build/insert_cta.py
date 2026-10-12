@@ -10,7 +10,7 @@ import json, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MS = os.path.join(ROOT, "book/manuscript")
 src = open(os.path.join(ROOT, "funnel/dist/book_cta.md"), encoding="utf-8").read()
-parts = {m.group(1): m.group(2).strip() for m in re.finditer(r"^## ([A-F])\b[^\n]*\n(.*?)(?=^## [A-F]\b|\Z)", src, flags=re.M | re.S)}
+parts = {m.group(1): re.sub(r"<!--.*?-->\s*", "", m.group(2), flags=re.S).strip() for m in re.finditer(r"^## ([A-F])\b[^\n]*\n(.*?)(?=^## [A-F]\b|\Z)", src, flags=re.M | re.S)}
 missing = [k for k in "ABCDEF" if k not in parts]
 if missing: sys.exit(f"book_cta.md is missing sections: {missing}")
 def strip_marks(s, key):
@@ -38,6 +38,8 @@ ap = os.path.join(MS, "afterword.md"); s_a = strip_marks(open(ap, encoding="utf-
 target = "感想は、奥付の連絡先に送ってほしい。それが、僕の次の一冊の種になる。"
 if target in s_a:
     s_a = s_a.replace(target, block("D", parts["D"]))
+elif "うまくいかなかった話でも構わない。" in s_a:
+    s_a = s_a.replace("うまくいかなかった話でも構わない。", "うまくいかなかった話でも構わない。" + block("D", parts["D"]), 1)
 else:
     lines = s_a.rstrip().split("\n"); lines.insert(len(lines) - 1, block("D", parts["D"]) + "\n"); s_a = "\n".join(lines) + "\n"
 open(ap, "w", encoding="utf-8").write(s_a)
@@ -48,7 +50,7 @@ open(os.path.join(MS, "bonus.md"), "w", encoding="utf-8").write(e.strip() + "\n"
 bj = os.path.join(MS, "book.json"); b = json.load(open(bj, encoding="utf-8"))
 b["chapters"] = [c for c in b["chapters"] if c["id"] != "bonus"] + [{"id": "bonus", "kind": "backmatter", "title": re.sub(r"^#\s*", "", e.strip().splitlines()[0]), "file": "bonus.md"}]
 f = parts["F"]
-prof = re.sub(r"^#+.*$", "", f, flags=re.M).strip()
+prof = re.sub(r"^(#+.*|\*\*著者プロフィール\*\*)$", "", f, flags=re.M).strip()
 contact = ""
 m = re.search(r"^.*(ご感想|お問い合わせ).*$", prof, flags=re.M)
 if m:

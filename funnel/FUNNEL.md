@@ -206,3 +206,25 @@ funnel/
   build/               md_to_pdf.js（特典PDF）、make_qr.py、apply_config.py
 arukinagara/index.html  公開されるLP（main にマージ後、GitHub Pages で配信）
 ```
+
+## 公開までの手順（著者）
+
+1. LINE公式アカウントを開設し、友だち追加URL（https://lin.ee/…）を `funnel/config.json` の LINE_URL に入れる。商品の販売ページができたら SALES_URL、Amazonの商品ページができたら BOOK_URL も入れる。
+2. `python3 funnel/build/apply_config.py` を実行する（LP・配信文・特典・QRが差し替わる）。
+3. `python3 book/build/insert_cta.py` → `python3 book/build/build_epub.py book/manuscript book/dist/arukinagara-hanasudake.epub --cover book/dist/cover.jpg` で書籍を再ビルドし、KDPに再アップロードする（巻末のリンクはLP固定なので、LINE_URLだけ変える場合は書籍の再アップロードは不要）。
+4. `node funnel/build/md_to_pdf.js funnel/dist/bonus_content.md funnel/dist/bonus_worksheet.pdf` で特典PDFを再生成し、Lステップ／UTAGEの自動返信にURLを設定する。
+5. このブランチを main にマージすると GitHub Pages で `arukinagara/index.html` が LP_URL に公開される。
+6. `funnel/dist/line_messages.md` の各メッセージを、見出しのタイミングどおりにステップ配信へ登録する。
+
+## レビューで残った確認事項
+
+- [ ] LINE配信に含まれる著者の実体験の確認：Day 1「週の打ち合わせの半分くらいは歩ける回」、Day 2・②-A「風の音で相手に3回聞き返された（有線イヤホンのマイクがシャツに擦れた）」、Day 3「聞かれるのはいつも申し込みまでの道筋／自分のサイトを一度に作り直して息切れした」、Day 5「案を3つ出して『どちらでも』と答えて案件が止まった」、Day 11「1か月に話せる件数に上限があり、超えた月は夕方の1件で頭が回らなくなった」。事実でなければ「たとえば」か「〜するようになった」に書き換える（捏造禁止・STYLE）。
+- [ ] 販売ページ（{{SALES_URL}}）側の必須記載：料金（税込）、提供枠数、受付期限、予約の変更・キャンセル・返金の条件、お断りする基準、特定商取引法に基づく表記。Day 8 配信は「販売ページに書きました」と案内しているので、未記載のまま配信すると虚偽になる。
+- [ ] Day 8・10・11 の「◯つ」「◯月◯日」は実数を入れ、Day 11「今日で今月の受付を閉じます。枠が埋まっていなくても閉じます」は実際にその日で受付を止める運用を守ること（締切後の受付は景表法上の二重価格・虚偽締切に当たりうる）。
+- [ ] LPフッターの「特定商取引法に基づく表記」「プライバシーポリシー」の実体ページ。現状 funnel/lp/body.html は1行の注記のみ。プライバシーポリシーにはLステップ／UTAGEへの業務委託（LINE表示名・ユーザーID・回答の取り扱い）を明記することを推奨。
+- [ ] funnel/lp/body.html は lp_copy.md から手で起こしたHTMLのため、今回のLP修正（特典の内訳5枚＋付録、アンケート1問、配信頻度、FAQ）を body.html にも反映して再ビルドが必要。
+- [ ] ワークシートに追加した付録2ページ（仕分け表・一文づくり）は本文第2章・第5章・まえがきの型から編集側で起こしたもの。著者が実際に使っている仕分け基準（相手1〜2人・案を出す回・画面不要）と合うか確認。
+- [ ] 著者プロフィールの「本書が初の著書」（book_cta.md F）と、仕事内容の表記「小さな事業のWeb・集客まわり（販売ページ、講座の案内など）について相談に乗り、何から直すかを一緒に決める」が事実か（PLAN.json author_check_items と同じ要確認）。
+- [ ] {{BOOK_URL}}（Amazon商品ページ）が lp_copy.md に残っている。apply_config.py と config.json は対応済みだが、指示の4プレースホルダー外なので、不要なら著者リンク行ごと削除、必要なら config.json の ASIN を実値に差し替える。
+- [ ] 購入者向け配信「相談で聞いたことは、外に出しません」とDay 14「読者から届いた1件目の話を本人の許可をもらって匿名で紹介」は両立するが、紹介の際は毎回許可を取り記録を残す運用を徹底すること。
+- [ ] 本文（STYLE.md・BRIEF.md）は著者名を「荒川理」としたままだが、config.json の AUTHOR は「荒川知哉」。{{AUTHOR}} の置換で導線側は揃うが、書籍本文・KDPメタデータ側の著者名も同じ名前に差し替わっているか確認。

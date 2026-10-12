@@ -25,3 +25,9 @@ GitHubにアップしたあと、Repository Settings の Pages で `main` ブラ
 - OpenAI APIで自然文ログの精度向上
 - Firebaseログインとクラウド保存
 - LINE入力連携
+
+## 書籍『歩きながら、話すだけ。』と公式LINE動線
+
+- `book/` … 電子書籍（原稿・EPUB・表紙・KDP登録情報）
+- `funnel/` … 書籍→公式LINE→商品販売の動線（設計書・LP・特典PDF・配信文）
+- `arukinagara/` … 読者特典LP（GitHub Pages で公開）

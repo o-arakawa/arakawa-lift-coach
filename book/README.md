@@ -10,6 +10,8 @@
 | `dist/cover.jpg` | KDP「Kindle 本の表紙」にアップロードする表紙（1600×2560px JPEG） |
 | `KDP_METADATA.md` | KDP 登録画面に転記する書誌情報・説明文・キーワード・カテゴリー・価格の推奨値 |
 | `AUTHOR_CHECKLIST.md` | 出版前に著者本人が確認する事項（実名掲載の可否、エピソードの事実確認など） |
+| `plan/PEN_NAME.md` | ペンネーム「荒川知哉」の選定根拠（画数・数秘） |
+| `../funnel/FUNNEL.md` | 書籍→公式LINE→商品販売の動線設計と公開手順（LP・特典PDF・配信文はその下） |
 
 ## 中身
 
@@ -21,6 +23,7 @@
 
 ```bash
 # 依存: Python 3.11+, Java（epubcheck 用）, Node 22 + playwright + Chromium（表紙の再描画時のみ）
+python3 book/build/insert_cta.py                                 # 読者特典（LINE）への誘導を本文に挿入（再実行可）
 python3 book/build/lint_manuscript.py book/manuscript          # 禁止語・文字数・構造チェック
 python3 book/build/build_epub.py book/manuscript book/dist/arukinagara-hanasudake.epub --cover book/dist/cover.jpg
 java -jar epubcheck.jar book/dist/arukinagara-hanasudake.epub  # https://github.com/w3c/epubcheck/releases
